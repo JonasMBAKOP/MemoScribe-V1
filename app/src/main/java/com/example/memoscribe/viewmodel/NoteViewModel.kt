@@ -1,5 +1,10 @@
 package com.example.memoscribe.viewmodel
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.ViewModel
+import com.example.memoscribe.model.Note
+
 class NoteViewModel : ViewModel() {
     private val _notes = mutableStateOf<List<Note>>(emptyList())
     val notes: State<List<Note>> = _notes
@@ -10,7 +15,7 @@ class NoteViewModel : ViewModel() {
 
     fun addNote(title: String, content: String) {
         val newNote = Note(title = title, content = content)
-        _notes.value = _notes.value + newNote
+        _notes.value += newNote
         saveNotesToDataStore()
     }
 

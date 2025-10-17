@@ -72,6 +72,8 @@ dependencies {
 
     // Gson pour la sérialisation JSON
     implementation(libs.gson)
+    implementation(libs.junit.junit)
+    implementation(libs.core.ktx)
 
     // UUID pour les IDs uniques (optionnel mais recommandé)
     // UUID est intégré en Kotlin, pas besoin de dépendance

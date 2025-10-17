@@ -1,3 +1,42 @@
 <resources>
     <string name="app_name">MemoScribe</string>
+
+    <!-- Écran Principal -->
+    <string name="title_notes_list">Mes Notes</string>
+    <string name="button_add_note">Ajouter une note</string>
+    <string name="empty_notes_message">Aucune note pour le moment. Créez votre première note !</string>
+
+    <!-- Écran Ajout de Note -->
+    <string name="title_add_note">Ajouter une note</string>
+    <string name="label_title">Titre</string>
+    <string name="label_content">Contenu</string>
+    <string name="hint_title">Entrez le titre</string>
+    <string name="hint_content">Écrivez votre note...</string>
+
+    <!-- Écran Édition de Note -->
+    <string name="title_edit_note">Éditer la note</string>
+    <string name="created_date">Créée le : %s</string>
+    <string name="updated_date">Modifiée le : %s</string>
+
+    <!-- Boutons Communs -->
+    <string name="button_save">Valider</string>
+    <string name="button_cancel">Annuler</string>
+    <string name="button_delete">Supprimer</string>
+    <string name="button_edit">Éditer</string>
+
+    <!-- Messages de Confirmation -->
+    <string name="confirm_delete">Êtes-vous sûr de vouloir supprimer cette note ?</string>
+    <string name="button_confirm">Confirmer</string>
+    <string name="button_close">Fermer</string>
+
+    <!-- Messages d'Erreur -->
+    <string name="error_empty_title">Le titre ne peut pas être vide</string>
+    <string name="error_title_too_long">Le titre ne doit pas dépasser 100 caractères</string>
+    <string name="error_empty_content">Le contenu ne peut pas être vide</string>
+    <string name="error_content_too_long">Le contenu ne doit pas dépasser 5000 caractères</string>
+
+    <!-- Messages de Succès -->
+    <string name="note_added">Note créée avec succès</string>
+    <string name="note_updated">Note modifiée avec succès</string>
+    <string name="note_deleted">Note supprimée</string>
 </resources>

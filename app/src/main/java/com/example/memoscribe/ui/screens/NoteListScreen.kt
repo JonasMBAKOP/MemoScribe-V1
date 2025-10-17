@@ -1,5 +1,6 @@
 package com.example.memoscribe.ui.screens
 
+/*
 @Composable
 fun NoteListScreen(viewModel: NoteViewModel) {
     Column(modifier = Modifier.fillMaxSize()) {
@@ -21,3 +22,5 @@ fun NoteListScreen(viewModel: NoteViewModel) {
         }
     }
 }
+
+ */
