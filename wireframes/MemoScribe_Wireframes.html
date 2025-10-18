@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Wireframes MemoScribe</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                padding: 40px 20px;
+                min-height: 100vh;
+            }
+            
+            .container {
+                max-width: 1400px;
+                margin: 0 auto;
+            }
+            
+            h1 {
+                text-align: center;
+                color: white;
+                margin-bottom: 20px;
+                font-size: 2.5em;
+                text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            }
+            
+            .subtitle {
+                text-align: center;
+                color: rgba(255,255,255,0.9);
+                margin-bottom: 40px;
+                font-size: 1.2em;
+            }
+            
+            .wireframes-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+                gap: 30px;
+                margin-bottom: 40px;
+            }
+            
+            .wireframe-card {
+                background: white;
+                border-radius: 20px;
+                padding: 30px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                transition: transform 0.3s ease;
+            }
+            
+            .wireframe-card:hover {
+                transform: translateY(-5px);
+            }
+            
+            .wireframe-title {
+                font-size: 1.5em;
+                color: #6200EE;
+                margin-bottom: 10px;
+                font-weight: bold;
+            }
+            
+            .wireframe-desc {
+                color: #666;
+                margin-bottom: 20px;
+                font-size: 0.95em;
+            }
+            
+            .phone-frame {
+                width: 100%;
+                max-width: 320px;
+                margin: 0 auto;
+                background: #f5f5f5;
+                border: 3px solid #333;
+                border-radius: 30px;
+                padding: 50px 15px 50px 15px;
+                position: relative;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            }
+            
+            .phone-notch {
+                position: absolute;
+                top: 15px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 120px;
+                height: 25px;
+                background: #333;
+                border-radius: 0 0 15px 15px;
+            }
+            
+            .screen {
+                background: white;
+                border-radius: 10px;
+                overflow: hidden;
+                box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+            }
+            
+            .app-bar {
+                background: #6200EE;
+                color: white;
+                padding: 16px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            
+            .app-bar-title {
+                font-size: 1.2em;
+                font-weight: bold;
+            }
+            
+            .icon {
+                width: 24px;
+                height: 24px;
+                border-radius: 50%;
+                background: rgba(255,255,255,0.3);
+            }
+            
+            .content {
+                padding: 16px;
+                min-height: 400px;
+            }
+            
+            .note-card {
+                background: #FFFACD;
+                border-radius: 8px;
+                padding: 12px;
+                margin-bottom: 12px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            
+            .note-title {
+                font-weight: bold;
+                color: #333;
+                margin-bottom: 4px;
+                font-size: 1em;
+            }
+            
+            .note-preview {
+                color: #666;
+                font-size: 0.85em;
+                margin-bottom: 4px;
+                line-height: 1.4;
+            }
+            
+            .note-date {
+                color: #999;
+                font-size: 0.75em;
+            }
+            
+            .fab {
+                position: absolute;
+                bottom: 70px;
+                right: 30px;
+                width: 56px;
+                height: 56px;
+                background: #6200EE;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+                color: white;
+                font-size: 2em;
+                font-weight: 300;
+            }
+            
+            .empty-state {
+                text-align: center;
+                padding: 60px 20px;
+                color: #999;
+            }
+            
+            .empty-icon {
+                font-size: 4em;
+                margin-bottom: 16px;
+            }
+            
+            .text-field {
+                width: 100%;
+                padding: 12px;
+                border: 2px solid #ddd;
+                border-radius: 8px;
+                margin-bottom: 16px;
+                font-family: inherit;
+                font-size: 0.95em;
+            }
+            
+            .text-field:focus {
+                outline: none;
+                border-color: #6200EE;
+            }
+            
+            .text-field.multiline {
+                min-height: 120px;
+                resize: vertical;
+            }
+            
+            .label {
+                font-weight: 600;
+                color: #333;
+                margin-bottom: 8px;
+                display: block;
+                font-size: 0.9em;
+            }
+            
+            .button-group {
+                display: flex;
+                gap: 12px;
+                margin-top: 20px;
+            }
+            
+            .button {
+                flex: 1;
+                padding: 12px;
+                border: none;
+                border-radius: 8px;
+                font-weight: 600;
+                cursor: pointer;
+                font-size: 0.9em;
+                transition: all 0.2s;
+            }
+            
+            .button-primary {
+                background: #6200EE;
+                color: white;
+            }
+            
+            .button-secondary {
+                background: white;
+                color: #6200EE;
+                border: 2px solid #6200EE;
+            }
+            
+            .button-danger {
+                background: white;
+                color: #CF6679;
+                border: 2px solid #CF6679;
+            }
+            
+            .date-info {
+                background: #f5f5f5;
+                padding: 12px;
+                border-radius: 8px;
+                margin-bottom: 16px;
+                font-size: 0.85em;
+                color: #666;
+            }
+            
+            .legend {
+                background: white;
+                border-radius: 15px;
+                padding: 30px;
+                margin-top: 40px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            }
+            
+            .legend-title {
+                font-size: 1.8em;
+                color: #6200EE;
+                margin-bottom: 20px;
+                font-weight: bold;
+            }
+            
+            .legend-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 20px;
+            }
+            
+            .legend-item {
+                display: flex;
+                align-items: start;
+                gap: 12px;
+            }
+            
+            .legend-icon {
+                width: 40px;
+                height: 40px;
+                background: #6200EE;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-weight: bold;
+                flex-shrink: 0;
+            }
+            
+            .legend-text {
+                flex: 1;
+            }
+            
+            .legend-label {
+                font-weight: 600;
+                color: #333;
+                margin-bottom: 4px;
+            }
+            
+            .legend-desc {
+                font-size: 0.9em;
+                color: #666;
+            }
+            
+            .download-btn {
+                display: block;
+                width: fit-content;
+                margin: 40px auto;
+                padding: 16px 32px;
+                background: white;
+                color: #6200EE;
+                border: none;
+                border-radius: 12px;
+                font-size: 1.1em;
+                font-weight: bold;
+                cursor: pointer;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+                transition: all 0.3s;
+            }
+            
+            .download-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 7px 20px rgba(0,0,0,0.4);
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>📱 Wireframes MemoScribe</h1>
+            <p class="subtitle">Maquettes d'Interface Utilisateur - Application de Bloc-Notes</p>
+            
+            <div class="wireframes-grid">
+                <!-- Écran 1 : Liste des Notes -->
+                <div class="wireframe-card">
+                    <h2 class="wireframe-title">Écran 1 : Liste des Notes</h2>
+                    <p class="wireframe-desc">Écran principal affichant toutes les notes de l'utilisateur avec possibilité d'en ajouter de nouvelles.</p>
+                    
+                    <div class="phone-frame">
+                        <div class="phone-notch"></div>
+                        <div class="screen">
+                            <div class="app-bar">
+                                <div class="icon"></div>
+                                <div class="app-bar-title">Mes Notes</div>
+                                <div class="icon"></div>
+                            </div>
+                            <div class="content">
+                                <div class="note-card">
+                                    <div class="note-title">Courses de la semaine</div>
+                                    <div class="note-preview">Acheter du lait, des œufs, du pain...</div>
+                                    <div class="note-date">Modifiée le : 17/10/2024 14:30</div>
+                                </div>
+                                <div class="note-card">
+                                    <div class="note-title">Réunion projet</div>
+                                    <div class="note-preview">Points à discuter : budget, planning...</div>
+                                    <div class="note-date">Modifiée le : 16/10/2024 09:15</div>
+                                </div>
+                                <div class="note-card">
+                                    <div class="note-title">Idées vacances</div>
+                                    <div class="note-preview">Destinations possibles : Bali, Tokyo...</div>
+                                    <div class="note-date">Modifiée le : 15/10/2024 18:45</div>
+                                </div>
+                            </div>
+                            <div class="fab">+</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Écran 2 : État Vide -->
+                <div class="wireframe-card">
+                    <h2 class="wireframe-title">Écran 2 : État Vide</h2>
+                    <p class="wireframe-desc">Affichage quand l'utilisateur n'a encore créé aucune note. Encourage la création de la première note.</p>
+                    
+                    <div class="phone-frame">
+                        <div class="phone-notch"></div>
+                        <div class="screen">
+                            <div class="app-bar">
+                                <div class="icon"></div>
+                                <div class="app-bar-title">Mes Notes</div>
+                                <div class="icon"></div>
+                            </div>
+                            <div class="content">
+                                <div class="empty-state">
+                                    <div class="empty-icon">📝</div>
+                                    <div>Aucune note pour le moment.</div>
+                                    <div>Créez votre première note !</div>
+                                </div>
+                            </div>
+                            <div class="fab">+</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Écran 3 : Ajouter une Note -->
+                <div class="wireframe-card">
+                    <h2 class="wireframe-title">Écran 3 : Ajouter une Note</h2>
+                    <p class="wireframe-desc">Formulaire pour créer une nouvelle note avec titre et contenu. Champs vides à remplir.</p>
+                    
+                    <div class="phone-frame">
+                        <div class="phone-notch"></div>
+                        <div class="screen">
+                            <div class="app-bar">
+                                <div class="icon"></div>
+                                <div class="app-bar-title">Ajouter une note</div>
+                                <div class="icon">✕</div>
+                            </div>
+                            <div class="content">
+                                <label class="label">Titre</label>
+                                <input type="text" class="text-field" placeholder="Entrez le titre" value="">
+                                
+                                <label class="label">Contenu</label>
+                                <textarea class="text-field multiline" placeholder="Écrivez votre note..."></textarea>
+                                
+                                <div class="button-group">
+                                    <button class="button button-secondary">Annuler</button>
+                                    <button class="button button-primary">Valider</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Écran 4 : Éditer une Note -->
+                <div class="wireframe-card">
+                    <h2 class="wireframe-title">Écran 4 : Éditer une Note</h2>
+                    <p class="wireframe-desc">Formulaire pour modifier une note existante. Champs pré-remplis avec les données actuelles. Affiche les dates.</p>
+                    
+                    <div class="phone-frame">
+                        <div class="phone-notch"></div>
+                        <div class="screen">
+                            <div class="app-bar">
+                                <div class="icon"></div>
+                                <div class="app-bar-title">Éditer la note</div>
+                                <div class="icon">✕</div>
+                            </div>
+                            <div class="content">
+                                <div class="date-info">
+                                    <div>📅 Créée le : 15/10/2024 18:45</div>
+                                    <div>✏️ Modifiée le : 17/10/2024 14:30</div>
+                                </div>
+                                
+                                <label class="label">Titre</label>
+                                <input type="text" class="text-field" value="Courses de la semaine">
+                                
+                                <label class="label">Contenu</label>
+                                <textarea class="text-field multiline">Acheter du lait, des œufs, du pain, du fromage et des fruits.</textarea>
+                                
+                                <div class="button-group">
+                                    <button class="button button-secondary">Annuler</button>
+                                    <button class="button button-primary">Valider</button>
+                                    <button class="button button-danger">Supprimer</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Légende -->
+            <div class="legend">
+                <h2 class="legend-title">📐 Guide des Éléments UI</h2>
+                <div class="legend-grid">
+                    <div class="legend-item">
+                        <div class="legend-icon">TB</div>
+                        <div class="legend-text">
+                            <div class="legend-label">TopAppBar</div>
+                            <div class="legend-desc">Barre de navigation en haut avec titre et icônes d'action</div>
+                        </div>
+                    </div>
+                    
+                    <div class="legend-item">
+                        <div class="legend-icon">NC</div>
+                        <div class="legend-text">
+                            <div class="legend-label">NoteCard</div>
+                            <div class="legend-desc">Carte affichant titre, aperçu et date d'une note. Fond jaune clair.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="legend-item">
+                        <div class="legend-icon">+</div>
+                        <div class="legend-text">
+                            <div class="legend-label">FloatingActionButton</div>
+                            <div class="legend-desc">Bouton flottant violet en bas à droite pour ajouter une note</div>
+                        </div>
+                    </div>
+                    
+                    <div class="legend-item">
+                        <div class="legend-icon">TF</div>
+                        <div class="legend-text">
+                            <div class="legend-label">TextField</div>
+                            <div class="legend-desc">Champ de saisie pour titre (ligne unique) ou contenu (multiline)</div>
+                        </div>
+                    </div>
+                    
+                    <div class="legend-item">
+                        <div class="legend-icon">B1</div>
+                        <div class="legend-text">
+                            <div class="legend-label">Bouton Primaire</div>
+                            <div class="legend-desc">Bouton violet rempli pour l'action principale (Valider)</div>
+                        </div>
+                    </div>
+                    
+                    <div class="legend-item">
+                        <div class="legend-icon">B2</div>
+                        <div class="legend-text">
+                            <div class="legend-label">Bouton Secondaire</div>
+                            <div class="legend-desc">Bouton avec bordure violette pour action secondaire (Annuler)</div>
+                        </div>
+                    </div>
+                    
+                    <div class="legend-item">
+                        <div class="legend-icon">B3</div>
+                        <div class="legend-text">
+                            <div class="legend-label">Bouton Danger</div>
+                            <div class="legend-desc">Bouton rouge pour action destructive (Supprimer)</div>
+                        </div>
+                    </div>
+                    
+                    <div class="legend-item">
+                        <div class="legend-icon">📅</div>
+                        <div class="legend-text">
+                            <div class="legend-label">Dates</div>
+                            <div class="legend-desc">Affichage des dates de création et modification (mode édition uniquement)</div>
+                        </div>
+                    </div>
+                    
+                    <div class="legend-item">
+                        <div class="legend-icon">∅</div>
+                        <div class="legend-text">
+                            <div class="legend-label">Empty State</div>
+                            <div class="legend-desc">Message affiché quand aucune note n'existe (icône + texte centré)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="download-btn" onclick="window.print()">
+                📥 Télécharger les Wireframes (Ctrl+P ou Cmd+P)
+            </button>
+        </div>
+    </body>
+</html>
