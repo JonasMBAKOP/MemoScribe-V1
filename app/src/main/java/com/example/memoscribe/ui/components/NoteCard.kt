@@ -1,6 +1,5 @@
 package com.example.memoscribe.ui.components
 
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
@@ -126,19 +125,6 @@ fun NoteCardPreview() {
     }
 }
 
-/*
-@Preview(showBackground = true, name="Mode Sombre", uiMode = UI_MODE_NIGHT_YES)
-@Composable
-fun NoteCardDarkPreview() {
-    MemoScribeTheme {
-        NoteCard(
-            note = Note(title = "Mode sombre", content = "Test du mode sombre"),
-            onClick = {}
-        )
-    }
-}
-*/
-
 @Preview(showBackground = true, name = "Contenu Court")
 @Composable
 fun NoteCardShortContentPreview() {
@@ -232,6 +218,38 @@ fun NoteCardListPreview() {
                 ),
                 onClick = {}
             )
+        }
+    }
+}
+
+@Preview(showBackground = true, name = "Mode Sombre", uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun NoteCardDarkModePreview() {
+    MemoScribeTheme(useDarkTheme = true) {
+        Surface(color = MaterialTheme.colorScheme.background) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                NoteCard(
+                    note = Note(
+                        title = "Note en mode sombre",
+                        content = "Ceci est une note affichée en mode sombre pour tester les couleurs et le contraste."
+                    ),
+                    onClick = {},
+                    onLongClick = {}
+                )
+                NoteCard(
+                    note = Note(
+                        title = "Note sélectionnée (sombre)",
+                        content = "Cette note est sélectionnée en mode sombre."
+                    ),
+                    isSelectionMode = true,
+                    isSelected = true,
+                    onClick = {},
+                    onLongClick = {}
+                )
+            }
         }
     }
 }

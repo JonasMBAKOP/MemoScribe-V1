@@ -3,7 +3,7 @@
 ## Écrans Principaux de l'application
 
 ### 1️⃣ NoteListScreen (Écran d'accueil)
-- Ecran d'accueiprincipal
+- Ecran d'accueil principal
 - Point f'entrée de l'app
 - Affiche liste de toutes les notes
 - FloatingActionButton en bas-droit (ajouter)
