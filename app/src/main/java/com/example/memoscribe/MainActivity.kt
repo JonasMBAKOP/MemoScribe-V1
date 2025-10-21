@@ -1,6 +1,7 @@
 package com.example.memoscribe
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -11,16 +12,21 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.memoscribe.model.Note
+import com.example.memoscribe.repository.NoteRepository
 import com.example.memoscribe.ui.screens.AddEditNoteScreen
 import com.example.memoscribe.ui.screens.NoteListScreen
 import com.example.memoscribe.ui.theme.MemoScribeTheme
+import com.example.memoscribe.viewmodel.NoteViewModel
+import com.example.memoscribe.viewmodel.NoteViewModelFactory
 
 
 /**
@@ -34,58 +40,42 @@ import com.example.memoscribe.ui.theme.MemoScribeTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Créer le Repository avec le contexte de l'application
+        val repository = NoteRepository(applicationContext)
+
         enableEdgeToEdge()
         setContent {
             MemoScribeTheme {
-                MemoScribeApp()
+                // Créer le ViewModel avec la Factory
+                val viewModel: NoteViewModel = viewModel(
+                    factory = NoteViewModelFactory(repository)
+                )
+
+                MemoScribeApp(viewModel = viewModel)
             }
         }
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
 
 /**
  * Point d'entrée principal de l'application
- * Configure la navigation et gère l'état temporaire
+ * Configure la navigation et connecte le ViewModel à l'UI
+ *
+ * @param viewModel ViewModel principal de l'application
  */
 @Composable
-fun MemoScribeApp() {
+fun MemoScribeApp(
+    viewModel: NoteViewModel
+) {
     val navController = rememberNavController()
+    val context = LocalContext.current
 
-    // ===== DONNÉES DE TEST (TEMPORAIRE) =====
-    // Sera remplacé par le ViewModel en ÉTAPE 3
-    var testNotes by remember {
-        mutableStateOf(
-            listOf(
-                Note(
-                    id = "1",
-                    title = "Courses de la semaine",
-                    content = "Acheter du lait, des œufs, du pain, du fromage et des fruits pour toute la semaine."
-                ),
-                Note(
-                    id = "2",
-                    title = "Réunion projet",
-                    content = "Points à discuter : budget, planning, équipe, objectifs, deadlines et prochaines étapes."
-                ),
-                Note(
-                    id = "3",
-                    title = "Idées vacances",
-                    content = "Destinations possibles : Bali, Tokyo, New York, Paris, Rome, Londres, Barcelone."
-                )
-            )
-        )
-    }
-
-    // État pour le mode sélection (TEMPORAIRE)
-    var isSelectionMode by remember { mutableStateOf(false) }
-    var selectedNoteIds by remember { mutableStateOf(setOf<String>()) }
+    // Observer les états du ViewModel
+    val notes by viewModel.notes
+    val isSelectionMode by viewModel.isSelectionMode
+    val selectedNoteIds by viewModel.selectedNoteIds
 
     NavHost(
         navController = navController,
@@ -95,7 +85,7 @@ fun MemoScribeApp() {
         // ===== ÉCRAN 1 : LISTE DES NOTES =====
         composable("notes_list") {
             NoteListScreen(
-                notes = testNotes,
+                notes = notes,
                 isSelectionMode = isSelectionMode,
                 selectedNoteIds = selectedNoteIds,
                 onNoteClick = { noteId ->
@@ -104,21 +94,11 @@ fun MemoScribeApp() {
                 },
                 onNoteLongClick = { noteId ->
                     // Activer le mode sélection
-                    isSelectionMode = true
-                    selectedNoteIds = setOf(noteId)
+                    viewModel.enableSelectionMode(noteId)
                 },
                 onToggleNoteSelection = { noteId ->
-                    // Toggle la sélection
-                    selectedNoteIds = if (noteId in selectedNoteIds) {
-                        selectedNoteIds - noteId
-                    } else {
-                        selectedNoteIds + noteId
-                    }
-
-                    // Si plus aucune note sélectionnée, désactiver le mode
-                    if (selectedNoteIds.isEmpty()) {
-                        isSelectionMode = false
-                    }
+                    // Toggle la sélection d'une note
+                    viewModel.toggleNoteSelection(noteId)
                 },
                 onAddNoteClick = {
                     // Navigation vers l'écran d'ajout
@@ -126,14 +106,20 @@ fun MemoScribeApp() {
                 },
                 onCancelSelection = {
                     // Désactiver le mode sélection
-                    isSelectionMode = false
-                    selectedNoteIds = emptySet()
+                    viewModel.disableSelectionMode()
                 },
                 onDeleteSelected = {
-                    // Supprimer les notes sélectionnées (TEMPORAIRE)
-                    testNotes = testNotes.filter { it.id !in selectedNoteIds }
-                    isSelectionMode = false
-                    selectedNoteIds = emptySet()
+                    // Supprimer les notes sélectionnées
+                    val count = viewModel.selectedCount
+                    val success = viewModel.deleteSelectedNotes()
+
+                    if (success) {
+                        Toast.makeText(
+                            context,
+                            "$count note(s) supprimée(s)",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             )
         }
@@ -152,7 +138,7 @@ fun MemoScribeApp() {
 
             // Récupérer la note si on est en mode édition
             val note = if (noteId != null && noteId != "null") {
-                testNotes.find { it.id == noteId }
+                viewModel.getNoteById(noteId)
             } else {
                 null
             }
@@ -161,39 +147,67 @@ fun MemoScribeApp() {
                 noteId = noteId,
                 note = note,
                 onSaveClick = { title, content ->
-                    if (noteId != null && noteId != "null") {
-                        // MODE ÉDITER : Mettre à jour la note existante
-                        testNotes = testNotes.map { existingNote ->
-                            if (existingNote.id == noteId) {
-                                existingNote.copy(
-                                    title = title,
-                                    content = content,
-                                    updatedTimestamp = System.currentTimeMillis()
-                                )
-                            } else {
-                                existingNote
-                            }
-                        }
-                    } else {
-                        // MODE AJOUTER : Créer une nouvelle note
-                        val newNote = Note(
-                            title = title,
-                            content = content
-                        )
-                        testNotes = testNotes + newNote
+                    // Validation et sauvegarde
+                    val (isValid, errorMessage) = viewModel.validateNoteInput(title, content)
+
+                    if (!isValid) {
+                        // Afficher l'erreur de validation
+                        Toast.makeText(
+                            context,
+                            errorMessage ?: "Erreur de validation",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return@AddEditNoteScreen
                     }
 
-                    // Retour à la liste
-                    navController.navigateUp()
+                    // Sauvegarder (ajouter ou modifier)
+                    val success = if (noteId != null && noteId != "null") {
+                        // MODE ÉDITER
+                        viewModel.updateNote(noteId, title, content)
+                    } else {
+                        // MODE AJOUTER
+                        viewModel.addNote(title, content)
+                    }
+
+                    if (success) {
+                        // Afficher confirmation
+                        Toast.makeText(
+                            context,
+                            if (noteId != null && noteId != "null") {
+                                context.getString(R.string.note_updated)
+                            } else {
+                                context.getString(R.string.note_added)
+                            },
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                        // Retour à la liste
+                        navController.navigateUp()
+                    } else {
+                        // Erreur lors de la sauvegarde
+                        Toast.makeText(
+                            context,
+                            "Erreur lors de la sauvegarde",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 },
                 onDeleteClick = {
-                    // Supprimer la note (TEMPORAIRE)
-                    if (noteId != null) {
-                        testNotes = testNotes.filter { it.id != noteId }
-                    }
+                    // Supprimer la note
+                    if (noteId != null && noteId != "null") {
+                        val success = viewModel.deleteNote(noteId)
 
-                    // Retour à la liste
-                    navController.navigateUp()
+                        if (success) {
+                            Toast.makeText(
+                                context,
+                                context.getString(R.string.note_deleted),
+                                Toast.LENGTH_SHORT
+                            ).show()
+
+                            // Retour à la liste
+                            navController.navigateUp()
+                        }
+                    }
                 },
                 onNavigateBack = {
                     // Retour sans sauvegarder
@@ -201,25 +215,5 @@ fun MemoScribeApp() {
                 }
             )
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    MemoScribeTheme {
-        Greeting("Android")
-    }
-}
-
-/**
- * Preview de l'application complète
- * Note : Les previews de navigation sont limitées, mieux vaut tester sur émulateur
- */
-@Preview(showBackground = true)
-@Composable
-fun MemoScribeAppPreview() {
-    MemoScribeTheme {
-        MemoScribeApp()
     }
 }
