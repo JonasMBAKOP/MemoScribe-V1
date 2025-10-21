@@ -75,6 +75,9 @@ dependencies {
     implementation(libs.junit.junit)
     implementation(libs.core.ktx)
 
+    // Navigation Compose
+    implementation(libs.androidx.navigation.compose)
+
     // UUID pour les IDs uniques (optionnel mais recommandé)
     // UUID est intégré en Kotlin, pas besoin de dépendance
 
